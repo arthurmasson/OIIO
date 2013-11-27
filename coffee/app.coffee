@@ -51,20 +51,29 @@ $(document).ready(->
 # actual addTab function: adds new tab using the input from the form above
 addTab = (type)->
 	tabContentHtml = exports.templates.find("[data-type='"+type+"']").clone()
-	# if type == "Library"
-	# else if type == "GUI"
-	# else if type == "Output"
-	# else if type == "OIIO"
 	label = makeNewName($(".tabs > ul.ui-droppable-tab"), type)
 	id = "tab-" + exports.tabCounter
 	tabContentHtml.attr("id",id)
 	li = exports.tabHeader.clone()
-	li.find("a").attr("data-name",label).text(label).attr("href", "#" + id)
+	li.find("a").attr("data-name",label).text(label).attr("href", "#" + id).resize(()->
+		console.log $(this).innerWidth()
+	)
 	tabs1 = exports.tabs.filter(".group-1")
 	tabs1.find(".ui-tabs-nav").append(li)
 	tabs1.append(tabContentHtml)
 	tabs1.tabs("refresh")
 	exports.tabCounter++
+
+
+	if type == "Library"
+		console.log "Library"
+	else if type == "GUI"
+		console.log "GUI"
+	else if type == "Output"
+		if not exports.output?
+			exports.output = new Output(tabContentHtml)
+	else if type == "OIIO"
+		console.log "OIIO"
 
 # transfer the tab to other tabs
 transferTab = (event, ui)->
